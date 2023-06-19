@@ -42,11 +42,11 @@ const extractingNumbersFromString = (string) => {
   return parseInt(resultString, 10);
 };
 
-console.log(extractingNumbersFromString('2023 год')); // 2023
-console.log(extractingNumbersFromString('ECMAScript 2022')); // 2022
-console.log(extractingNumbersFromString('1 кефир, 0.5 батона')); // 105
-console.log(extractingNumbersFromString('агент 007')); // 7
-console.log(extractingNumbersFromString('а я томат'));// NaN
-console.log(extractingNumbersFromString(2023));// 2023
-console.log(extractingNumbersFromString(-1)); // 1
-console.log(extractingNumbersFromString(1.5)); // 15
+extractingNumbersFromString('2023 год'); // 2023
+extractingNumbersFromString('ECMAScript 2022'); // 2022
+extractingNumbersFromString('1 кефир, 0.5 батона'); // 105
+extractingNumbersFromString('агент 007'); // 7
+extractingNumbersFromString('а я томат');// NaN
+extractingNumbersFromString(2023);// 2023
+extractingNumbersFromString(-1); // 1
+extractingNumbersFromString(1.5); // 15
