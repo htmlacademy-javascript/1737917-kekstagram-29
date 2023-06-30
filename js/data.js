@@ -87,5 +87,3 @@ const createDescriptionPhoto = () => {
 const createArrayDescriptionsPhoto = () => Array.from({length: DESCRIPTION_PHOTO_COUNT}, createDescriptionPhoto);
 
 export {createArrayDescriptionsPhoto};
-
-console.log(createArrayDescriptionsPhoto());
