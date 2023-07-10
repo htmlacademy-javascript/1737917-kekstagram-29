@@ -31,3 +31,13 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 export {getRandomInteger, createRandomIdFromRangeGenerator, getRandomArrayElement};
+
+// Функция проверки, что нажата кнопка Escape
+
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+// Функция проверки, что нажата кнопка Enter
+
+const isEnterKey = (evt) => evt.key === 'Enter';
+
+export {isEscapeKey, isEnterKey};
