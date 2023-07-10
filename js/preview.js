@@ -1,9 +1,9 @@
 // Модуль для отображения фотографий других пользователей
 
-// import { bigPictureOpen } from './big-picture.js';
+import { bigPictureOpen } from './big-picture.js';
 
 const picturesPreviewContainer = document.querySelector('.pictures');
-const picturePreviewTemplate = document.querySelector('#picture').content;
+const picturePreviewTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 // Функция создания изображения пользователя из шаблона
 
@@ -15,25 +15,20 @@ const createPreviewPicture = ({ url, description, likes, comments }) => {
   picturePreviewElement.querySelector('.picture__likes').textContent = likes;
   picturePreviewElement.querySelector('.picture__comments').textContent = comments.length;
 
-  // picturePreviewElement.addEventListener('click', () => {
-  //   console.log('привет!');
-  // });
-
   return picturePreviewElement;
 };
 
-// Функция генерации изображений пользователя из массива описаний фотографий
+// Функция генерации и добавления в разметку изображений пользователя из массива описаний фотографий
 
 const displayPreviewPictures = (descriptionPhotos) => {
   const picturesPreviewFragment = document.createDocumentFragment();
 
   descriptionPhotos.forEach((descriptionPhoto) => {
     const picturePreview = createPreviewPicture(descriptionPhoto);
-    picturePreview.dataset.descriptionId = descriptionPhoto.id;
-    // picturePreview.addEventListener('click', (evt) => {
-    //   evt.preventDefault();
-    //   bigPictureOpen(descriptionPhoto);
-    // });
+    picturePreview.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      bigPictureOpen(descriptionPhoto);
+    });
     picturesPreviewFragment.append(picturePreview);
   });
 
