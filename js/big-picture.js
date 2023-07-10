@@ -52,7 +52,7 @@ const displayComments = (comments) => {
   commentsContainer.append(picturesPreviewFragment);
 };
 
-// Функция заполнения данными из большой фотографии
+// Функция заполнения большой фотографии данными из маленькой картинки
 
 const bigPictureCreate = (url, likes, comments) => {
   const image = bigPicture.querySelector('.big-picture__img img');
@@ -61,6 +61,8 @@ const bigPictureCreate = (url, likes, comments) => {
   bigPicture.querySelector('.comments-count').textContent = comments.length;
   displayComments(comments);
 };
+
+// Функция отображения большой фотографии
 
 const bigPictureOpen = ({ url, description, likes, comments }) => {
   bigPictureCreate(url, description, likes, comments);
