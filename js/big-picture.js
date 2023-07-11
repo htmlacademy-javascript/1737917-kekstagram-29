@@ -10,6 +10,8 @@ const commentsCount = bigPicture.querySelector('.social__comment-count');
 const commentsLoaderButton = bigPicture.querySelector('.comments-loader');
 const pageBody = document.querySelector('body');
 
+//
+
 const bigPictureClose = () => {
   bigPicture.classList.add('hidden');
   pageBody.classList.remove('modal-open');
