@@ -61,7 +61,7 @@ const createComment = () => {
 
   return {
     id: randomIdComments(),
-    avatar: `mg/avatar-${randomAvatarIndex}.svg`,
+    avatar: `img/avatar-${randomAvatarIndex}.svg`,
     message: createCommentMessage(),
     name: getRandomArrayElement(NAMES),
   };
