@@ -10,6 +10,11 @@ const commentsCount = bigPicture.querySelector('.social__comment-count');
 const commentsLoaderButton = bigPicture.querySelector('.comments-loader');
 const pageBody = document.querySelector('body');
 
+let commentsShown = 0;
+let commentsForBigPicture = [];
+
+// Функция закрытия большой фотографии
+
 const bigPictureClose = () => {
   bigPicture.classList.add('hidden');
   pageBody.classList.remove('modal-open');
