@@ -1408,3 +1408,12 @@ main {
 .hidden {
   display: none;
 }
+
+
+/* Для ошибок Pristine */
+
+.img-upload__error-text {
+  text-transform: none;
+  color: #e90000;
+  background-color: #ffffff;
+}
