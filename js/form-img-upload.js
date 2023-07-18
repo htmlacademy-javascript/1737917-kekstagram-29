@@ -1,6 +1,8 @@
 // Модуль для работы с формой редактирования изображения
 
 import { isEscapeKey } from './util.js';
+import { setScale, reset as resetScale } from './scale.js';
+import { setEffectSlider, reset as resetEffect } from './effects.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_HASHTAG_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -10,15 +12,15 @@ const ErrorMessage = {
   INVALID_HASHTAG: 'Неправильный хэштег',
 };
 
-const imgUploadForm = document.querySelector('.img-upload__form');
-const imgUploadFile = imgUploadForm.querySelector('.img-upload__input');
-const imgUploadEdit = imgUploadForm.querySelector('.img-upload__overlay');
-const hashtagField = imgUploadForm.querySelector('.text__hashtags');
-const commentField = imgUploadForm.querySelector('.text__description');
-const imgUploadFormCancel = imgUploadForm.querySelector('.img-upload__cancel');
+const formImgUpload = document.querySelector('.img-upload__form');
+const fileImgUploadElement = formImgUpload.querySelector('.img-upload__input');
+const modalImgUploadEdit = formImgUpload.querySelector('.img-upload__overlay');
+const hashtagField = formImgUpload.querySelector('.text__hashtags');
+const commentField = formImgUpload.querySelector('.text__description');
+const buttonFormImgUploadCancel = formImgUpload.querySelector('.img-upload__cancel');
 const pageBody = document.querySelector('body');
 
-const pristine = new Pristine(imgUploadForm, {
+const pristine = new Pristine(formImgUpload, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__error-text',
@@ -26,7 +28,7 @@ const pristine = new Pristine(imgUploadForm, {
 
 // Функция-обработчик нажатия кнопки "Опубликовать"
 
-const onImgUpdateFormSubmit = (evt) => {
+const onFormImgUpdateSubmit = (evt) => {
   evt.preventDefault();
   pristine.validate();
 };
@@ -37,10 +39,12 @@ const isTextFieldFocused = () => document.activeElement === hashtagField || docu
 
 // Функция закрытия модального окна редактирования изображения
 
-const imgUploadFormClose = () => {
-  imgUploadForm.reset();
+const formImgUploadClose = () => {
+  formImgUpload.reset();
   pristine.reset();
-  imgUploadEdit.classList.add('hidden');
+  resetScale();
+  resetEffect();
+  modalImgUploadEdit.classList.add('hidden');
   pageBody.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
   // commentsLoaderButton.removeEventListener('click', onLoaderButtonClick);
@@ -51,47 +55,50 @@ const imgUploadFormClose = () => {
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt) && !isTextFieldFocused()) {
     evt.preventDefault();
-    imgUploadFormClose();
+    formImgUploadClose();
   }
 }
 
 // Функция открытия модального окна редактирования изображения
 
-const imgUploadFormOpen = () => {
-  imgUploadEdit.classList.remove('hidden');
+const formImgUploadOpen = () => {
+  modalImgUploadEdit.classList.remove('hidden');
   pageBody.classList.add('modal-open');
+  setEffectSlider();
+  setScale();
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-// Функция-обработчик ввода имени файла
+// Функция-обработчик ввода имени файла для загрузки
 
-function onUploadFileChange(evt) {
+function onFileImgUploadChange(evt) {
   evt.preventDefault();
-  imgUploadFormOpen();
+  formImgUploadOpen();
 }
 
 // Функция-обработчик нажатия кнопки закрытия окна редактирования изображения
-function onCancelButtonClick(evt) {
+
+function onButtonCancelClick(evt) {
   evt.preventDefault();
-  imgUploadFormClose();
+  formImgUploadClose();
 }
 
 // Функция получения массива хэштегов из строки, исключая пробелы
 
-const normilizeTags = (tagString) => tagString.trim().split(' ').filter((tag) => Boolean(tag.length));
+const normalizeTags = (tagString) => tagString.trim().split(' ').filter((tag) => Boolean(tag.length));
 
 // Функция проверки количества введенных хэштегов
 
-const hasValidHashtagCount = (value) => normilizeTags(value).length <= MAX_HASHTAG_COUNT;
+const hasValidHashtagCount = (value) => normalizeTags(value).length <= MAX_HASHTAG_COUNT;
 
 // Функция проверки введенных хэштегов на соответствие паттернам
 
-const hasValidHashtags = (value) => normilizeTags(value).every((tag) => VALID_HASHTAG_SYMBOLS.test(tag));
+const hasValidHashtags = (value) => normalizeTags(value).every((tag) => VALID_HASHTAG_SYMBOLS.test(tag));
 
 // Функция проверки введенных хэштегов на уникальность
 
 const hasUniqueHashtags = (value) => {
-  const lowerCaseTags = normilizeTags(value).map((tag) => tag.toLowerCase());
+  const lowerCaseTags = normalizeTags(value).map((tag) => tag.toLowerCase());
   return lowerCaseTags.length === new Set(lowerCaseTags).size;
 };
 
@@ -125,8 +132,8 @@ pristine.addValidator(
   true
 );
 
-imgUploadForm.addEventListener('submit', onImgUpdateFormSubmit);
+formImgUpload.addEventListener('submit', onFormImgUpdateSubmit);
 
-imgUploadFile.addEventListener('change', onUploadFileChange);
+fileImgUploadElement.addEventListener('change', onFileImgUploadChange);
 
-imgUploadFormCancel.addEventListener('click', onCancelButtonClick);
+buttonFormImgUploadCancel.addEventListener('click', onButtonCancelClick);

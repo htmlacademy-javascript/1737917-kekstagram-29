@@ -1,6 +1,6 @@
 // Модуль для отображения фотографий других пользователей в полноразмерном режиме
 
-import { isEscapeKey, isEnterKey } from './util.js';
+import { isEscapeKey } from './util.js';
 
 const COMMENTS_PER_PORTION = 5;
 
@@ -99,16 +99,7 @@ const bigPictureOpen = ({ url, likes, comments }) => {
   bigPicture.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
   commentsLoaderButton.addEventListener('click', onLoaderButtonClick);
+  bigPictureCancel.addEventListener('click', bigPictureClose);
 };
-
-bigPictureCancel.addEventListener('click', () => {
-  bigPictureClose();
-});
-
-bigPictureCancel.addEventListener('keydown', (evt) => {
-  if (isEnterKey(evt)) {
-    bigPictureClose();
-  }
-});
 
 export { bigPictureOpen };
