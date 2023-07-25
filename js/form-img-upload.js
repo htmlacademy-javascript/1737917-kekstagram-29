@@ -1,15 +1,15 @@
 // Модуль для работы с формой редактирования изображения
 
+import { sendData } from './api.js';
 import { isEscapeKey } from './util.js';
 import { setScale, reset as resetScale } from './scale.js';
 import { setEffectSlider, reset as resetEffect } from './effects.js';
+import { validate, reset as resetValidator } from './validator.js';
+import { showSuccessMessage, showErrorMessage } from './message.js';
 
-const MAX_HASHTAG_COUNT = 5;
-const VALID_HASHTAG_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const ErrorMessage = {
-  INVALID_HASHTAG_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хэштегов`,
-  NOT_UNIQUE_HASHTAG: 'Хэштеги не должны повторяться',
-  INVALID_HASHTAG: 'Неправильный хэштег',
+const SubmitButtonText = {
+  IDLE: 'Сохранить',
+  SENDING: 'Сохраняю...'
 };
 
 const formImgUpload = document.querySelector('.img-upload__form');
@@ -18,19 +18,45 @@ const modalImgUploadEdit = formImgUpload.querySelector('.img-upload__overlay');
 const hashtagField = formImgUpload.querySelector('.text__hashtags');
 const commentField = formImgUpload.querySelector('.text__description');
 const buttonFormImgUploadCancel = formImgUpload.querySelector('.img-upload__cancel');
+const submitButton = formImgUpload.querySelector('.img-upload__submit');
 const pageBody = document.querySelector('body');
 
-const pristine = new Pristine(formImgUpload, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'img-upload__error-text',
-});
+// Функция блокировки кнопки оправки формы
 
-// Функция-обработчик нажатия кнопки "Опубликовать"
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
 
-const onFormImgUpdateSubmit = (evt) => {
-  evt.preventDefault();
-  pristine.validate();
+// Функция разблокировки кнопки оправки формы
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+// Функция установки обработчика события нажатия кнопки "Опубликовать"
+
+const setFormImgUpdateSubmit = (onSuccess) => {
+  formImgUpload.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = validate();
+    if (!isValid) {
+      return;
+    }
+    blockSubmitButton();
+    sendData(new FormData(evt.target))
+      .then(() => {
+        onSuccess();
+        showSuccessMessage();
+      })
+      .catch(
+        () => {
+          showErrorMessage();
+        }
+      )
+      .finally(unblockSubmitButton);
+  });
 };
 
 // Функция проверки, что поле ввода хэштега или поле комментария активны
@@ -41,13 +67,12 @@ const isTextFieldFocused = () => document.activeElement === hashtagField || docu
 
 const formImgUploadClose = () => {
   formImgUpload.reset();
-  pristine.reset();
+  resetValidator();
   resetScale();
   resetEffect();
   modalImgUploadEdit.classList.add('hidden');
   pageBody.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
-  // commentsLoaderButton.removeEventListener('click', onLoaderButtonClick);
 };
 
 // Функция-обработчик нажатия кнопки Escape
@@ -83,57 +108,12 @@ function onButtonCancelClick(evt) {
   formImgUploadClose();
 }
 
-// Функция получения массива хэштегов из строки, исключая пробелы
+// Функция установки обработчиков событий для работы с формой редактирования изображения
 
-const normalizeTags = (tagString) => tagString.trim().split(' ').filter((tag) => Boolean(tag.length));
-
-// Функция проверки количества введенных хэштегов
-
-const hasValidHashtagCount = (value) => normalizeTags(value).length <= MAX_HASHTAG_COUNT;
-
-// Функция проверки введенных хэштегов на соответствие паттернам
-
-const hasValidHashtags = (value) => normalizeTags(value).every((tag) => VALID_HASHTAG_SYMBOLS.test(tag));
-
-// Функция проверки введенных хэштегов на уникальность
-
-const hasUniqueHashtags = (value) => {
-  const lowerCaseTags = normalizeTags(value).map((tag) => tag.toLowerCase());
-  return lowerCaseTags.length === new Set(lowerCaseTags).size;
+const setFormImgUpdateEventListeners = () => {
+  fileImgUploadElement.addEventListener('change', onFileImgUploadChange);
+  buttonFormImgUploadCancel.addEventListener('click', onButtonCancelClick);
+  setFormImgUpdateSubmit(formImgUploadClose);
 };
 
-// Валидатор на количество введенных хэштегов
-
-pristine.addValidator(
-  hashtagField,
-  hasValidHashtagCount,
-  ErrorMessage.INVALID_HASHTAG_COUNT,
-  3,
-  true
-);
-
-// Валидатор на соответствие введенных хэштегов паттерным
-
-pristine.addValidator(
-  hashtagField,
-  hasValidHashtags,
-  ErrorMessage.INVALID_HASHTAG,
-  2,
-  true
-);
-
-//Валидатор на уникальность хэштегов
-
-pristine.addValidator(
-  hashtagField,
-  hasUniqueHashtags,
-  ErrorMessage.NOT_UNIQUE_HASHTAG,
-  1,
-  true
-);
-
-formImgUpload.addEventListener('submit', onFormImgUpdateSubmit);
-
-fileImgUploadElement.addEventListener('change', onFileImgUploadChange);
-
-buttonFormImgUploadCancel.addEventListener('click', onButtonCancelClick);
+export { setFormImgUpdateEventListeners };

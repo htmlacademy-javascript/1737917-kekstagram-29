@@ -49,14 +49,6 @@ const EFFECTS = [
     step: 0.1,
     unit: '',
   },
-  {
-    name: 'heat',
-    style: 'brightness',
-    min: 1,
-    max: 3,
-    step: 0.1,
-    unit: ''
-  }
 ];
 const DEFAULT_EFFECT = EFFECTS[0];
 
@@ -71,17 +63,17 @@ let selectedEffect = DEFAULT_EFFECT;
 
 // Функция инициализации слайдера
 
-const initSlider = () => {
+const initSlider = (effectConfig) => {
   noUiSlider.create(sliderElement, {
     range: {
-      min: DEFAULT_EFFECT.min,
-      max: DEFAULT_EFFECT.max,
+      min: effectConfig.min,
+      max: effectConfig.max,
     },
-    start: DEFAULT_EFFECT.max,
-    step: DEFAULT_EFFECT.step,
+    start: effectConfig.max,
+    step: effectConfig.step,
     connect: 'lower',
   });
-  effectLevelElement.value = DEFAULT_EFFECT.max;
+  effectLevelElement.value = effectConfig.max;
 };
 
 // Функция скрытия слайдера
@@ -134,7 +126,7 @@ const onEffectChange = (evt) => {
   updateSlider();
 };
 
-// Функция сбпроса настроек слайдера в значение по умолчанию
+// Функция сброса настроек слайдера в значение по умолчанию
 
 const reset = () => {
   selectedEffect = DEFAULT_EFFECT;
@@ -144,7 +136,7 @@ const reset = () => {
 // Функция активации управления эффектами изображения
 
 const setEffectSlider = () => {
-  initSlider();
+  initSlider(DEFAULT_EFFECT);
   hideSlider();
   effects.addEventListener('change', onEffectChange);
   sliderElement.noUiSlider.on('update', onSliderUpdate);
