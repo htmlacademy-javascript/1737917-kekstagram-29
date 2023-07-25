@@ -41,18 +41,21 @@ const setFormImgUpdateSubmit = (onSuccess) => {
   formImgUpload.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = validate();
-    if (isValid) {
-      blockSubmitButton();
-      sendData(new FormData(evt.target))
-        .then(onSuccess)
-        .then(showSuccessMessage)
-        .catch(
-          () => {
-            showErrorMessage();
-          }
-        )
-        .finally(unblockSubmitButton);
+    if (!isValid) {
+      return;
     }
+    blockSubmitButton();
+    sendData(new FormData(evt.target))
+      .then(() => {
+        onSuccess();
+        showSuccessMessage();
+      })
+      .catch(
+        () => {
+          showErrorMessage();
+        }
+      )
+      .finally(unblockSubmitButton);
   });
 };
 
