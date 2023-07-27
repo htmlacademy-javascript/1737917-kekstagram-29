@@ -21,8 +21,8 @@ const createPreviewPicture = ({ url, description, likes, comments }) => {
 // Функция генерации и добавления в разметку изображений пользователя из массива описаний фотографий
 
 const displayPreviewPictures = (descriptionPhotos) => {
+  picturesPreviewContainer.querySelectorAll('.picture').forEach((element) => element.remove());
   const picturesPreviewFragment = document.createDocumentFragment();
-
   descriptionPhotos.forEach((descriptionPhoto) => {
     const picturePreview = createPreviewPicture(descriptionPhoto);
     picturePreview.addEventListener('click', (evt) => {
