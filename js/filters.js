@@ -20,6 +20,8 @@ const sortRandomly = () => Math.random() - 0.5;
 
 const sortByComments = (pictureA, pictureB) => pictureB.comments.length - pictureA.comments.length;
 
+// Функция формирования массива данный в зависимости от выбранной сортировки
+
 const getFilteredPictures = () => {
   switch (currentFilter) {
     case Filter.RANDOM:
@@ -30,6 +32,8 @@ const getFilteredPictures = () => {
       return [...pictures];
   }
 };
+
+// Функция установки обработчика события нажатия кнопки выбора фильтра
 
 const setOnFilterClick = (callback) => {
   filters.addEventListener('click', (evt) => {
@@ -47,6 +51,8 @@ const setOnFilterClick = (callback) => {
     callback(getFilteredPictures());
   });
 };
+
+// Функция инициализации фильтра
 
 const init = (loadedPictures, callback) => {
   filters.classList.remove('img-filters--inactive');
