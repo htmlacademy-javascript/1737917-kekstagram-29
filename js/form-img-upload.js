@@ -11,6 +11,7 @@ const SubmitButtonText = {
   IDLE: 'Сохранить',
   SENDING: 'Сохраняю...'
 };
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const formImgUpload = document.querySelector('.img-upload__form');
 const fileImgUploadElement = formImgUpload.querySelector('.img-upload__input');
@@ -20,6 +21,8 @@ const commentField = formImgUpload.querySelector('.text__description');
 const buttonFormImgUploadCancel = formImgUpload.querySelector('.img-upload__cancel');
 const submitButton = formImgUpload.querySelector('.img-upload__submit');
 const pageBody = document.querySelector('body');
+const imgUploadPreview = formImgUpload.querySelector('.img-upload__preview img');
+const effectsPreview = formImgUpload.querySelectorAll('.effects__preview');
 
 // Функция блокировки кнопки оправки формы
 
@@ -33,6 +36,11 @@ const blockSubmitButton = () => {
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+const isValidType = (file) => {
+  const fileName = file.name.toLowerCase();
+  return FILE_TYPES.some((it) => fileName.endsWith(it));
 };
 
 // Функция установки обработчика события нажатия кнопки "Опубликовать"
@@ -96,8 +104,15 @@ const formImgUploadOpen = () => {
 
 // Функция-обработчик ввода имени файла для загрузки
 
-function onFileImgUploadChange(evt) {
-  evt.preventDefault();
+function onFileImgUploadChange() {
+  const file = fileImgUploadElement.files[0];
+
+  if (file && isValidType(file)) {
+    imgUploadPreview.src = URL.createObjectURL(file);
+    effectsPreview.forEach((preview) => {
+      preview.style.backgroundImage = `url('${imgUploadPreview.src}')`;
+    });
+  }
   formImgUploadOpen();
 }
 
