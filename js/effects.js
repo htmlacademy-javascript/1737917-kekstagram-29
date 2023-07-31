@@ -133,6 +133,10 @@ const reset = () => {
   updateSlider();
 };
 
+// Функция удаления слайдера
+
+const destroySlider = () => sliderElement.noUiSlider.destroy();
+
 // Функция активации управления эффектами изображения
 
 const setEffectSlider = () => {
@@ -142,4 +146,4 @@ const setEffectSlider = () => {
   sliderElement.noUiSlider.on('update', onSliderUpdate);
 };
 
-export { reset, setEffectSlider };
+export { reset, setEffectSlider, destroySlider };
