@@ -3,7 +3,7 @@
 import { sendData } from './api.js';
 import { isEscapeKey } from './util.js';
 import { setScale, reset as resetScale } from './scale.js';
-import { setEffectSlider, reset as resetEffect, destroySlider } from './effects.js';
+import { setEffectSlider, destroySlider } from './effects.js';
 import { validate, reset as resetValidator } from './validator.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 
@@ -23,8 +23,6 @@ const submitButton = formImgUpload.querySelector('.img-upload__submit');
 const pageBody = document.querySelector('body');
 const imgUploadPreview = formImgUpload.querySelector('.img-upload__preview img');
 const effectsPreview = formImgUpload.querySelectorAll('.effects__preview');
-
-let documentKeydownRun = true;
 
 // Функция блокировки кнопки оправки формы
 
@@ -59,12 +57,10 @@ const setFormImgUpdateSubmit = (onSuccess) => {
       .then(() => {
         onSuccess();
         showSuccessMessage();
-        documentKeydownRun = false;
       })
       .catch(
         () => {
           showErrorMessage();
-          documentKeydownRun = false;
         }
       )
       .finally(unblockSubmitButton);
@@ -81,7 +77,6 @@ const formImgUploadClose = () => {
   formImgUpload.reset();
   resetValidator();
   resetScale();
-  resetEffect();
   destroySlider();
   modalImgUploadEdit.classList.add('hidden');
   pageBody.classList.remove('modal-open');
@@ -91,7 +86,10 @@ const formImgUploadClose = () => {
 // Функция-обработчик нажатия кнопки Escape
 
 function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt) && !isTextFieldFocused() && documentKeydownRun) {
+  if (isEscapeKey(evt) && !isTextFieldFocused()) {
+    if (document.querySelector('section.error')) {
+      return;
+    }
     evt.preventDefault();
     formImgUploadClose();
   }
@@ -136,8 +134,4 @@ const setFormImgUpdateEventListeners = () => {
   setFormImgUpdateSubmit(formImgUploadClose);
 };
 
-const documentKeydownformImgUploadReturn = () => {
-  documentKeydownRun = true;
-};
-
-export { setFormImgUpdateEventListeners, documentKeydownformImgUploadReturn };
+export { setFormImgUpdateEventListeners };

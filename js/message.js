@@ -1,7 +1,6 @@
 // Модуль сообщения о результатах отправки формы на сервер
 
 import { isEscapeKey } from './util.js';
-import { documentKeydownformImgUploadReturn } from './form-img-upload.js';
 
 const errorMessage = document.querySelector('#error').content.querySelector('.error');
 const successMessage = document.querySelector('#success').content.querySelector('.success');
@@ -13,7 +12,6 @@ const hideMessage = () => {
   const messageElement = document.querySelector('.success') || document.querySelector('.error');
   messageElement.remove();
   document.removeEventListener('keydown', onDocumentKeydown);
-  documentKeydownformImgUploadReturn();
   pageBody.removeEventListener('click', onBodyClick);
 };
 
