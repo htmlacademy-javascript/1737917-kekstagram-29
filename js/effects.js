@@ -126,16 +126,13 @@ const onEffectChange = (evt) => {
   updateSlider();
 };
 
-// Функция сброса настроек слайдера в значение по умолчанию
-
-const reset = () => {
-  selectedEffect = DEFAULT_EFFECT;
-  updateSlider();
-};
 
 // Функция удаления слайдера
 
-const destroySlider = () => sliderElement.noUiSlider.destroy();
+const destroySlider = () => {
+  selectedEffect = DEFAULT_EFFECT;
+  sliderElement.noUiSlider.destroy();
+};
 
 // Функция активации управления эффектами изображения
 
@@ -146,4 +143,4 @@ const setEffectSlider = () => {
   sliderElement.noUiSlider.on('update', onSliderUpdate);
 };
 
-export { reset, setEffectSlider, destroySlider };
+export { setEffectSlider, destroySlider };

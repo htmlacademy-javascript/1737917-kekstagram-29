@@ -7,6 +7,8 @@ import { getData } from './api.js';
 import { showAlert, debounce } from './util.js';
 import {init as initFilter, getFilteredPictures } from './filters.js';
 
+setFormImgUpdateEventListeners();
+
 getData()
   .then((data) => {
     const debouncedDisplayPreviewPictures = debounce(displayPreviewPictures);
@@ -17,5 +19,3 @@ getData()
     showAlert(err.message);
   }
   );
-
-setFormImgUpdateEventListeners();
